@@ -15,9 +15,11 @@ Ciência da Computação - UFRJ
 int vector[SIZE];
 
 void create_vector(){
+    printf("Creating vector with %d positions:\n", SIZE);
     for (int i = 0; i < SIZE; i++) {
         vector[i] = 1;
     }
+    printf("\nSuccessfully created vector!\n\n");
 }
 
 void* multiply_by_2(void* id_threads) {
@@ -32,8 +34,24 @@ void* multiply_by_2(void* id_threads) {
 }
 
 void print_vector(){
+    printf("\nPrinting Vector...\n");
     for (int i = 0; i < SIZE; i++) {
         printf("Index:\t%d\tValue:\t%d\n", i, vector[i]);
+    }
+}
+
+void test(){
+    printf("\nTesting...\n");
+    int sucess = 1;
+    for (int i = 0; i < SIZE; i++) {
+        vector[i] /= 2;
+        if(vector[i] != 1){
+            sucess = 0;
+            printf("\nTest Failed!\n\n");
+        }
+    }
+    if(sucess){
+        printf("\nSuccess! The vectors are the same! The threads worked!\n\n");
     }
 }
 
@@ -44,6 +62,8 @@ int main() {
 
     create_vector();
 
+    printf("\nStarting the process of creating and executing the threads.\n");
+
     for (int i = 0; i < NUM_THREADS; i++) {
         id_threads[i] = i;
         pthread_create(&threads[i], NULL, multiply_by_2, (void*) &id_threads[i]);
@@ -52,6 +72,8 @@ int main() {
     for (int i = 0; i < NUM_THREADS; i++) {
         pthread_join(threads[i], NULL);
     }
+
+    test();
 
     print_vector();
     
