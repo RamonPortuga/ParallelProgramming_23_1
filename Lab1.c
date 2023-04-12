@@ -22,13 +22,10 @@ void create_vector(){
     printf("\nSuccessfully created vector!\n\n");
 }
 
-void* multiply_by_2(void* id_threads) {
-    int id = *((int*) id_threads);
-
-    for (int i = id; i < SIZE; i = i + 2) {
+void *multiply_by_2(void *id_threads) {
+    for (long i = (long) id_threads; i < SIZE; i = i + 2) {
         vector[i] *= 2;
     }
-
     pthread_exit(NULL);
 }
 
@@ -50,22 +47,20 @@ void test(){
         }
     }
     if(sucess){
-        printf("\nSuccess! The vectors are the same! The threads worked!\n\n");
+        printf("\nSuccess! The vectors are the same! The threads worked!\n");
     }
 }
 
 int main() {
     printf("Starting...\n\n");
     pthread_t threads[NUM_THREADS];
-    int id_threads[NUM_THREADS];
 
     create_vector();
 
     printf("\nStarting the process of creating and executing the threads.\n");
 
-    for (int i = 0; i < NUM_THREADS; i++) {
-        id_threads[i] = i;
-        pthread_create(&threads[i], NULL, multiply_by_2, (void*) &id_threads[i]);
+    for (long i = 0; i < NUM_THREADS; i++) {
+        pthread_create(&threads[i], NULL, multiply_by_2, (void*) i);
     }
 
     for (int i = 0; i < NUM_THREADS; i++) {
