@@ -26,7 +26,6 @@ void* multiply_by_2(void* id_threads) {
     int id = *((int*) id_threads);
 
     for (int i = id; i < SIZE; i = i + 2) {
-        //printf("Changing index %d\n", i);
         vector[i] *= 2;
     }
 
