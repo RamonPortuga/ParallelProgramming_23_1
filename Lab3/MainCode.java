@@ -29,13 +29,14 @@ public class MainCode {
 
     public static void main (String [] args) throws InterruptedException {
         int sizeThreads;
-        double n;
+        double n, pi, marginOfError;
         double value = 0;
+        int pivot = 1;
 
-        for (int i = 0; i < 5; i++){
+        for (int i = 0; i <= 5; i++){
             value = 0;
-            sizeThreads = i + 1;
-            n = Math.pow(100, i + 1);
+            sizeThreads = pivot;
+            n = Math.pow(10, pivot);
 
             System.out.println("Starting test with " + sizeThreads + " Threads and N equal to " + n);
 
@@ -53,10 +54,9 @@ public class MainCode {
                 value += threads[i].getSum();
             }
 
-            System.out.println(value);
-
-            double pi = 4 * value;
-            double marginOfError = pi - Math.PI;
+            pi = 4 * value;
+            marginOfError = pi - Math.PI;
+            pivot++;
 
             System.out.println("Value of Pi: "+ pi);
             System.out.println("Margin of error: " + marginOfError);
