@@ -36,7 +36,7 @@ public class MainCode {
         for (int i = 0; i <= 5; i++){
             value = 0;
             sizeThreads = pivot;
-            n = Math.pow(10, pivot);
+            n = Math.pow(5, pivot);
 
             System.out.println("Starting test with " + sizeThreads + " Threads and N equal to " + n);
 
@@ -55,11 +55,11 @@ public class MainCode {
             }
 
             pi = 4 * value;
-            marginOfError = pi - Math.PI;
+            marginOfError = (pi - Math.PI) / Math.PI;
             pivot++;
 
             System.out.println("Value of Pi: "+ pi);
-            System.out.println("Margin of error: " + marginOfError);
+            System.out.println("Margin of error: " + marginOfError + "%");
             System.out.println("End of Test\n\n");
         }
     }
