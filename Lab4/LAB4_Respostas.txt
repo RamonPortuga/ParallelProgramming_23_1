@@ -1,0 +1,65 @@
+Ramon Oliveira de Azevedo
+120023419
+Ciência da Computação
+7° Período
+------------------------------------------------------------------------------
+ATIVIDADE 1:
+1. Abra o arquivo exemplo1.c e entenda o que ele faz. Qual sa ́ıda e esperada para o programa (valor final da variavel soma)?    
+
+RESPOSTA: Temos a criação de duas threads, utilizando os ids 0 e 1. Com isso em mente, temos que a função executada pela thread realiza a alteração na variável global "soma", de acordo com a demanda do sistema (com relação a ordem de execução das threads em paralelo). Na teoria, as threads incrementam, cada uma, 10k na variável "soma", resultando no valor de 20k ao final da execução (na teoria, o resultado prático será discutido mais a frente).
+
+
+2. Compile e execute o programa várias vezes e observe os resultados impressos na tela.
+    
+RESPOSTA: Em suma, o resultado mostrado é, em grande parte, 20000. Porém, devido o comportamento das threads no sistema, acaba acarretandoO resultado sai várias vezes como 20k, mas de vez em quando resulta em um resultado menor.
+
+
+3. Os valores impressos foram sempre o valor esperado? Se nao, explique por que isso aconteceu?
+
+RESPOSTA: Não. Como dito anteriormente, isso ocorre porque é possível de acabar ocorrendo o caso de as threads serem incrementadas ao mesmo tempo. Ou seja, a thread pode ler o próximo valor a ser incrementado na variável, mas antes de executar a tarefa, a sua "fatia de tempo" de execução pode acabar vencendo, fazendo com que ela seja forçada a esperar. Dessa forma, a thread seguinte acaba lendo o mesmo valor no qual não foi alterado pela thread anterior e executa a incrementação. Assim, ao invés de incrementar 2X, a variável acaba pr ser incrementada apenas 1X. Outro fator que pode acontcer é quando as threads estão em diferentes processadores e fazem as incrementações ao mesmo tempo (e, além disso, ambas carregam o mesmo valor inicial) e como elas não tem "visão" das incrementações da outra thread, o resultado também pode sair diferente.
+
+
+4. E possível que a variável soma termine com valor acima de 20000? Por que?
+
+RESPOSTA: Com o cenário descrito, ou seja, com 2 threads, isso não é possível. Como respondido no item anterior, só temos dos casos possíveis: A incrementação mostrar exatamente 20000 ou mostrar valores abaixo, devido ao que fora descrito.
+
+
+------------------------------------------------------------------------------
+ATIVIDADE 2:
+1. Abra o arquivo exemplo1a.c e compreenda como locks sao usados para implementar a exclusao mútua (acompanhe a explanação da professora).
+    
+RESPOSTA: Segundo a explicação dada em aula, temos que os locks estão sendo usados para garantir que, enquanto uma thread altera a variavel global "soma", nenhuma outra thread seja capaz de ler e/ou escrever a mesma. Como foi aprendido no decorrer desse período, as threads são criadas e começam a executar suas tarefas, porém, quando elas chegam na seção crítica (onde elas podem ler e/ou escrever na variavel global), a função lock é chamada, fazendo com que ela bloqueie ar a passagem das outras threads para a seção crítica assim que a primeira thread entra. Dessa forma, o primeiro fluxo entra na seção crítica do nosso código, executa suas incrementações e sai da mesma com a função unlock. Quando isso acontece, a próxima thread entra na seção crítica do programa "trancando" a passagem depois dela, repetindo o processo descrito.
+
+
+2. Execute o programa várias vezes. Os valores impressos foram sempre o valor esperado? Por que?
+
+RESPOSTA: Sim. Por conta da utilização das funções "lock" e "unlock", cada thread leu e/ou escreveu na variável global de tal forma que acabe por não alterar o conteúdo da mesma por outras threads ao mesmo tempo. Logo, isso faz com que a soma ocorra da maneira correta, incrementando a variável do modo que esperamos inicialmente, já que não ocorreu o caso de uma thread "passar por cima" de outra.
+
+
+3. Altere o numero de threads e avalie os resultados.
+
+RESPOSTA: Como podemos perceber no código, cada fluxo incrementa a variável "soma" em 10k. Logo, com 2 threads ficamos com "soma" igual a 20k 3 threads geram 30k e assim em diante.
+
+
+------------------------------------------------------------------------------
+ATIVIDADE 3:
+1. Leia o programa para entender o que ele faz (acompanhe a explanação da professora). Qual e a secao crítica do codigo? Qual saída e esperada para o programa (valor final de s)?
+
+RESPOSTA: A Seção Crítica do código é a parte em que as threads lêem e escrevem na variável compartilhada. Ela é uma seção crítica devido ao fato de esse ato poder ocorrer ao mesmo tempo. A saída esperada para esse programa, na teoria, é de 200k, já que cada thread é responsável por incrementar a variável em 100k.
+
+
+2. Compile o programa, execute-o varias vezes e observe os resultados impressos na tela. Os valores impressos foram sempre o valor esperado? Por que? 
+
+RESPOSTA: Não. O que temos é a mesma situação descrita no item 3 da atividade 1.
+
+
+------------------------------------------------------------------------------
+ATIVIDADE 4:
+2. Acompanhe a explanação da professora sobre o uso de "synchronized" em Java.
+
+RESPOSTA: Segunda a explicação dada pela professora, o synchronized funciona de modo bastante similar as funções "lock" e "unlock" que acabamos de ver na linguagem C. No código dado, temos a utilização de métodos com o syncronized que guardam as seções críticas do código dentro dele, que no nosso caso é ato de incremento, que é a modificação do valor da variável, e leitura da mesma. Além disso, temos que também é possível usar o syncronized em trechos específicos do código, colocando as chaves {}, onde elas representam a entrada e a saída do fluxo da SC.
+
+
+3. Compile o programa, execute-o varias vezes e observe os resultados impressos na tela. Os valores impressos foram sempre o valor esperado? Por que?
+
+RESPOSTA: Sim. Isso acontece porque a função synchronized faz o papel de execução mútua impedindo que outras threads executem mudanças na nossa variável global enquanto uma delas está alterando. Dessa forma, o código funciona como é esperado, fazendo com que a saída seja o valor que pensamos inicialmente.
