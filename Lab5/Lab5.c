@@ -19,8 +19,7 @@ int count = 0;
 pthread_mutex_t x_mutex;
 pthread_cond_t x_cond;
 
-void *createInitialThreads(void *arg)
-{
+void *createInitialThreads(void *arg){
     char *string = (char*) arg;
 
     pthread_mutex_lock(&x_mutex);
@@ -42,8 +41,7 @@ void *createInitialThreads(void *arg)
     pthread_exit(NULL);
 }
 
-void *createIntermediateThreads(void *arg)
-{
+void *createIntermediateThreads(void *arg){
 
     pthread_mutex_lock(&x_mutex);
 
@@ -59,8 +57,7 @@ void *createIntermediateThreads(void *arg)
     pthread_exit(NULL);
 }
 
-void *createEndThreads(void *arg)
-{
+void *createEndThreads(void *arg){
     char *string = (char*) arg;
     pthread_mutex_lock(&x_mutex);
 
@@ -77,8 +74,7 @@ void *createEndThreads(void *arg)
     pthread_exit(NULL);
 }
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]){
     int i;
     pthread_t threads[NTHREADS];
 
@@ -97,4 +93,6 @@ int main(int argc, char *argv[])
 
     pthread_mutex_destroy(&x_mutex);
     pthread_cond_destroy(&x_cond);
+    
+    return 0;
 }
