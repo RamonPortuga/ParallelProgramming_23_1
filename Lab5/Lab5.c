@@ -19,7 +19,7 @@ int x = 0;
 pthread_mutex_t x_mutex;
 pthread_cond_t x_cond;
 
-void *A(void *arg)
+void *createInitialThreads(void *arg)
 {
     /* Recebe como param uma string qualquer para ser mostrada. */
     char *string = (char*) arg;
@@ -45,7 +45,7 @@ void *A(void *arg)
     pthread_exit(NULL);
 }
 
-void *B(void *arg)
+void *createIntermediateThreads(void *arg)
 {
 
     pthread_mutex_lock(&x_mutex);
@@ -62,7 +62,7 @@ void *B(void *arg)
     pthread_exit(NULL);
 }
 
-void *C(void *arg)
+void *createEndThreads(void *arg)
 {
     /* Recebe como param uma string qualquer para ser mostrada. */
     char *string = (char*) arg;
@@ -92,11 +92,11 @@ int main(int argc, char *argv[])
     pthread_cond_init(&x_cond, NULL);
 
     /* Cria as threads */
-    pthread_create(&threads[0], NULL, A, (void*) "Oi Maria!.\n");
-    pthread_create(&threads[1], NULL, A, (void*) "Oi José!.\n");
-    pthread_create(&threads[2], NULL, B, NULL);
-    pthread_create(&threads[3], NULL, C, (void*) "Até mais João!\n");
-    pthread_create(&threads[4], NULL, C, (void*) "Até mais Maria!\n");
+    pthread_create(&threads[0], NULL, createInitialThreads, (void*) "Oi Maria!.\n");
+    pthread_create(&threads[1], NULL, createInitialThreads, (void*) "Oi José!.\n");
+    pthread_create(&threads[2], NULL, createIntermediateThreads, NULL);
+    pthread_create(&threads[3], NULL, createEndThreads, (void*) "Até mais João!\n");
+    pthread_create(&threads[4], NULL, createEndThreads, (void*) "Até mais Maria!\n");
 
     /* Espera todas as threads completarem */
     for (i = 0; i < NTHREADS; i++) {
