@@ -1,34 +1,78 @@
-//variaveis do problema
-int Buffer[N]; //espaco de dados compartilhados (N = tamanho do buffer)
-int count=0, out=0; //variaveis de estado
-//variaveis para sincronizacao
-pthread_mutex_t mutex;
-pthread_cond_t cond_cons, cond_prod;
-//preenche todos os espac ¸os do Buffer ou bloqueia a thread caso o Buffer n ~ao esteja vazio
-void Insere (int item[]) {
-	pthread_mutex_lock(&mutex);
-	while(count > 0) { //espera ter todos os espacos vazios no buffer
-		pthread_cond_wait(&cond_prod, &mutex);
+#include <stdio.h>
+#include <stdlib.h>
+#include <pthread.h>
+#include <semaphore.h>
+
+#define BUFFER_SIZE 3
+#define NTHREADS 4
+
+// Buffer com capacidade fixa
+int Buffer[BUFFER_SIZE];
+int count = 0;
+int out = 0;
+
+// Semáforos
+sem_t empty;  // Controla as posições vazias no buffer
+sem_t full;   // Controla as posições ocupadas no buffer
+sem_t mutexProd;  // Garante exclusão mútua ao acessar o buffer
+sem_t mutexCons;
+
+void Insere (int itens[]) {
+	while(count > 0) { 
+		sem_wait(&empty);
 	}
-	for(int i=0; i<N; i++) //copia vetor de entrada para o buffer
+	sem_wait(&mutexProd);
+	for(int i=0; i < BUFFER_SIZE; i++) 
 		Buffer[i] = itens[i];
-	count = N; //indica que o buffer est ´a cheio
-	//sinaliza para os consumidores
-	pthread_mutex_broadcast(&cond_cons);
-	pthread_mutex_unlock(&mutex);
+	count = BUFFER_SIZE;
+	printf("Quantidade do Buffer:\t%d", count);
+	sem_post(&mutexProd);
+	
+	sem_post(&full);
 }
-//retira um item do Buffer ou bloqueia a thread caso o Buffer esteja vazio
+
 int *Retira (void) {
-	int item; //copia do item que sera retirado
-	pthread_mutex_lock(&mutex);
-	while(count == 0) { //espera ter algum item no buffer
-		pthread_cond_wait(&cond_cons, &mutex);
+	int item;
+	while(count == 0) { 
+		sem_wait(&full);
 	}
+	sem_wait(&mutexCons);
 	item = Buffer[out];
-	out = (out + 1) % N;
-	count--; //indica que o buffer tem um item a menos
-	//sinaliza um produtor apenas quando o buffer estiver vazio
-	if(count==0) pthread_cond_signal(&cond_prod);
-		pthread_mutex_unlock(&mutex);
+	out = (out + 1) % BUFFER_SIZE;
+	count--;
+	printf("Quantidade do Buffer:\t%d", count);
+	sem_post(&mutexCons);
+	
+	if(count==0)
+		sem_wait(&empty);
 	return item;
+}
+
+int main(){
+    int i;
+    int vetor[BUFFER_SIZE];
+    pthread_t threads[NTHREADS];
+    
+    // Inicialização dos semáforos
+    sem_init(&empty, 0, BUFFER_SIZE);
+    sem_init(&full, 0, 0);
+    sem_init(&mutexProd, 0, 1);
+    sem_init(&mutexCons, 0, 1);
+
+    // Criação das threads produtoras e consumidoras
+    pthread_t produtor, consumidor;
+    int id1 = 1, id2 = 2;
+
+	for (i = 0; i < BUFFER_SIZE; i++){
+		vetor[i] = i;
+	}
+
+    pthread_create(&produtor, NULL, Insere, vetor);
+    pthread_create(&consumidor, NULL, Retira, NULL);
+    
+     /* Espera todas as threads completarem */
+    for (i = 0; i < NTHREADS; i++)
+    {
+        pthread_join(threads[i], NULL);
+    }
 }
