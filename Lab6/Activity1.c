@@ -1,3 +1,10 @@
+/*
+Ramon Oliveira de Azevedo
+120023419
+Ciência da Computação - UFRJ
+7° Período
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
