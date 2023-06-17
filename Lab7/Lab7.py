@@ -1,3 +1,11 @@
+"""
+Ramon Oliveira de Azevedo
+120023419
+7° Período
+Ciência da Computação
+"""
+
+
 from threading import Thread
 import math
 
@@ -18,6 +26,8 @@ class IncrementaThread(Thread):
 
 pivot = 1
 for i in range(1, 6):
+    print("Starting test: ", i)
+    
     value = 0
     sizeThreads = pivot
     n = int(math.pow(5, pivot))
