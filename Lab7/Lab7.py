@@ -1,13 +1,6 @@
-"""
-Ramon Oliveira de Azevedo
-120023419
-7° Período
-Ciência da Computação
-"""
-
-
 from threading import Thread
 import math
+import time
 
 class IncrementaThread(Thread):
     def __init__(self, id, sizeThreads, limit):
@@ -18,18 +11,23 @@ class IncrementaThread(Thread):
         self.sum = 0
 
     def run(self):
-        for i in range(self.idThreads, self.limit, self.sizeThreads):
+        for i in range(self.idThreads, self.limit):
+          if (i % self.sizeThreads == self.idThreads):
             self.sum += math.pow(-1, i) / (2 * i + 1)
 
     def getSum(self):
         return self.sum
 
 pivot = 1
-for i in range(1, 6):
-    print("Starting test: ", i)
-    
+for i in range(1, 4):
+    if(i == 3):
+      i += 1
+
+    start_time = time.time()
+    print("Starting test: ", pivot)
+
     value = 0
-    sizeThreads = pivot
+    sizeThreads = i
     n = int(math.pow(5, pivot))
 
     threads = []
@@ -51,7 +49,12 @@ for i in range(1, 6):
 
     pivot += 1
 
+    end_time = time.time()
+    execution_time = end_time - start_time
+
     print("Value of N = ", n)
+    print("Quantify of Threads: ", sizeThreads)
     print("Value of Pi = ", round(pi, 4))
-    print("Margin of error: " + str(round(marginOfError * 100, 4)) + " %");
+    print("Margin of error: " + str(round(marginOfError * 100, 4)) + " %")
+    print("Time: " + str(round(execution_time, 4)))
     print("End of Test\n\n")
