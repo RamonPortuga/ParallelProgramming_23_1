@@ -1,0 +1,25 @@
+Ramon Oliveira de Azevedo
+120023419
+7° Período
+Ciência da Computação
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+								Laboratório 7: Concorrência usando Python.
+
+ATIVIDADE 1 -
+Ao executarmos diversas vezes o arquivo citado no enunciado, ou seja, helloPython.py, podemos notar que não há alteração na saída. Isso se ocorre devido ao fato da concorrência em python ser "falsa", pois os fluxos criados são enfileirados em um único processador de forma a serem executadas de maneira sequencial. Com isso em emnte, aplicações CPUbounding tendem a perder com a implementação multithreading (em Python), porém, aplicações IOboung podem ganhar.
+
+
+ATIVIDADE 2 - 
+Para o programa incremento.py, temos que o resultado correto desse programa deveria ser 200k, já que as threads vão incrementar a variável compartilhada em 100k, cada um. Porém, ao executarmos, podemos perceber que, em algumas saídas, a variável não apresenta o valor esperado. O que acontece por conta da condição de corrida. Não é só porque elas são executadas sequencialmente que não haverá condição de corrida, pois as threads podem acabar se sobrepondo de forma a não incrementar a variavel corretamente. Ao usarmos o mecanismo lock(), temos que ele vai garantir que cada thread executa as iterações corretamente, mas demorando um pouco mais na execução.
+
+
+ATIVIDADE 3 -
+O programa io.py executa uma thread que fica interagindo com o usuário enquanto a thread principal executa algum processamento na CPU. Apesar de Python "não ser concorrente de verdade", como avaliado nesse exemplo, temos que aplicações que não dependem da CPU podem executar o paralelismo. Enquanto uma thread espera o usuário digitar, ela não precisa mais da CPU e, por consequência, a thread main consegue ocupar a CPU executando os cálculos de forma paralela a thread que aguarda a entrada do usuário.
+
+
+ATIVIDADE 4 -
+Agora, usando o programa web.py, temos que nesse exemplo, o que acontece é que as threads não ocupam a CPU, pois o que elas fazem é requisitar da rede e, enquanto aguarda a resposta do pedido, outras podem fazer a mesma requisição. E, enquanto essa aguarda, outra thread pode já ter recebido sua resposta. Desta maneira, as threads só usam a CPU para fazer suas requisições, deixando-a livre para as outras. Porém, vale ressaltar que o tempo de execução pode variar bastante já que a mesma depende da velocidade da rede.
+Dando continuidade, temos que quando executamos as threads com somente o método "run()", o programa acaba por rodar sem aproveitar as oportunidades de tempo entre as requisições e as respostas da rede. Em outras palavras, uma thread precisa esperar que outra faça a requisição e só depois de receber sua resposta ter a vez de usar a CPU. A consequência disso é o aumento no tempo de execução.
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
